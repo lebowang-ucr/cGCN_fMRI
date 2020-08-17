@@ -124,3 +124,41 @@ def get_model(graph_path='FC.npy',
             model.layers[i].set_weights(pre_model.layers[i].get_weights())
         
     return model
+
+
+if __name__ == "__main__":
+    # Small random data for easy overfitting.
+    N = 50
+    num_classes = 2
+    ROI_N = 236
+
+    x_train = np.random.rand(N, 100, ROI_N, 1) # (N, frame=100, ROI_N, feature)
+    y_train0 = np.random.choice(num_classes, N) # classify to num_classes categories
+    y_train = keras.utils.to_categorical(y_train0, num_classes)
+
+    random_FC = np.random.rand(ROI_N, ROI_N)
+    random_FC[np.diag_indices(ROI_N)] = 1
+    np.save('FC_random', random_FC)
+
+    model = get_model(
+        graph_path='FC_random.npy', 
+        kernels=[8,8,8,16,32,32], 
+        k=3, 
+        l2_reg=0, 
+        dp=0.5,
+        num_classes=num_classes, 
+        weight_path=None, 
+        skip=[0,0])
+    model.summary()
+    model.compile(loss=['categorical_crossentropy'], 
+              optimizer=keras.optimizers.Adam(lr=0.0001),
+              metrics=['accuracy'])
+    checkpointer = keras.callbacks.ModelCheckpoint(monitor='val_acc', filepath='tmp', 
+                                                verbose=1, save_best_only=True)
+    model.fit(x_train, y_train,
+            shuffle=True,
+            batch_size=4,
+            validation_data=(x_train, y_train),
+            epochs=50,
+            callbacks=[checkpointer])
+    # Best acc: >94% (random: 50%)
