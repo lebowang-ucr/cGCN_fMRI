@@ -65,6 +65,7 @@ print('lr:', lr)
 file_name='avg_edgeconv_k_' + str(k) + '_l2_' + str(l2_reg) + '_dp_' + str(dp)
 print('file_name:', file_name)
 
+os.system('mkdir tmp') # folder for the trained model
 tmp_name = 'tmp/tmp_' + file_name + '_' + strftime("%Y_%m_%d_%H_%M_%S", gmtime()) + '.hdf5'
 print('output tmp name:', tmp_name)
 
@@ -107,7 +108,6 @@ model.summary()
 
 
 ######################################## Training ####################################################
-
 model.compile(loss=['categorical_crossentropy'], 
               optimizer=optimizers.Adam(lr=lr),
               metrics=['accuracy'])
