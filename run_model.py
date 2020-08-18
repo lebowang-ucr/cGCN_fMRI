@@ -48,10 +48,9 @@ print (y_test.shape)
 ################################ Set parameter ###############################
 print()
 
-k = 5
+k = 5 # (3, 5, 10, 20)
 batch_size = 8
 epochs = 100
-# clipnorm = 0
 l2_reg = 1e-4
 dp = 0.5
 lr = 1e-5
@@ -73,6 +72,7 @@ print('output tmp name:', tmp_name)
 weight_name = None
 # weight_path = 'tmp/'
 
+## find the best pre-trained model
 # all_weights = os.listdir(weight_path)
 # all_right_models = {}
 # for n in all_weights:

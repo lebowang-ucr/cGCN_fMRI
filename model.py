@@ -55,6 +55,13 @@ def T_get_edge_feature(point_cloud_series, nn_idx, k=5):
     return edge_feature
 
 def T_conv_bn_max(edge_feature, kernel=2, activation_fn='relu', l2=0):
+#     """TimeDistributed conv with max as aggregation
+#     Args:
+#     edge_feature from T_get_edge_feature
+#     kernel: conv kernel size
+#     activation_fn: non-linear activation
+#     l2: l2 regularization
+
     ######### Conv2D #########
     net = TimeDistributed(Conv2D(kernel, (1,1), kernel_regularizer=l2))(edge_feature)
     # net = TimeDistributed(BatchNormalization(axis=-1))(net)
@@ -63,6 +70,15 @@ def T_conv_bn_max(edge_feature, kernel=2, activation_fn='relu', l2=0):
     return TimeDistributed(Lambda(lambda x: tf.reduce_max(x, axis=-2, keep_dims=True)))(net)
 
 def T_edge_conv(point_cloud_series, graph, kernel=2, activation_fn='relu', k=5, l2=0):
+#     """TimeDistributed conv with max as aggregation
+#     Args:
+#     point_cloud_series: input data
+#     graph: FC graph
+#     kernel: conv kernel size
+#     activation_fn: non-linear activation
+#     k: no. of neighbors for graph-conv
+#     l2: l2 regularization
+
     # assert len(graph.get_shape().as_list()) == 2
     graph = Lambda(lambda x: tf.tile(tf.expand_dims(x[0], axis=0), 
         [tf.shape(x[1])[0], 1, 1]))([graph, point_cloud_series])
@@ -78,7 +94,7 @@ def get_model(graph_path='FC.npy',
     k=5, l2_reg=1e-4, dp=0.5,
     num_classes=100,
     weight_path=None, skip=[0,0]):
-    ############ load static correlation matrix ##############
+    ############ load static FC matrix ##############
     print('load graph:', graph_path)
     adj_matrix = np.load(graph_path)
     graph = adj_matrix.argsort(axis=1)[:, ::-1][:, 1:k+1]
@@ -87,6 +103,7 @@ def get_model(graph_path='FC.npy',
     main_input = Input((input_frame, ROI_N, 1), name='points')
     static_graph_input = Input(tensor=tf.constant(graph, dtype=tf.int32), name='graph')
 
+    # 5 conv layers
     net1 = T_edge_conv(main_input, graph=static_graph_input, kernel=kernels[0], k=k, l2=l2(0))
     net2 = T_edge_conv(net1, graph=static_graph_input, kernel=kernels[1], k=k, l2=l2(0))
     net3 = T_edge_conv(net2, graph=static_graph_input, kernel=kernels[2], k=k, l2=l2(0))
@@ -94,9 +111,9 @@ def get_model(graph_path='FC.npy',
     net = Lambda(lambda x: tf.concat([x[0], 
         x[1], x[2], x[3]], axis=-1))([net1, net2, net3, net4])
     net = T_edge_conv(net, graph=static_graph_input, kernel=kernels[4], k=k, l2=l2(0))
-    # net = T_edge_conv(net, graph=static_graph_input, kernel=kernels[4], k=k, l2=l2(l2_reg))
     
     net = TimeDistributed(Dropout(dp))(net)
+    # ConvLSTM2D layer for temporal info
     net = ConvLSTM2D(kernels[5], kernel_size=(1,1), padding='same', 
                    return_sequences=True, recurrent_regularizer=l2(l2_reg))(net)
     net = TimeDistributed(BatchNormalization())(net)
@@ -104,13 +121,16 @@ def get_model(graph_path='FC.npy',
     net = TimeDistributed(Flatten())(net)
     net = TimeDistributed(Dropout(dp))(net)
     
+    # Dense layer with softmax activation
     net = TimeDistributed(Dense(num_classes, activation='softmax', 
             kernel_regularizer=l2(l2_reg)))(net)
+    # Mean prediction from each time frame
     net = Lambda(lambda x: K.mean(x, axis=1))(net)
 
     output_layer = net
     model = keras.models.Model([main_input, static_graph_input], output_layer)
 
+    # load pre_model model
     if weight_path:
         print('Load weight:', weight_path)
         pre_model = keras.models.load_model(weight_path,
@@ -122,19 +142,23 @@ def get_model(graph_path='FC.npy',
         # pre_model.summary()
         for i in range(skip[0], len(model.layers)-skip[1]):
             model.layers[i].set_weights(pre_model.layers[i].get_weights())
-        
     return model
 
 
 if __name__ == "__main__":
-    # Small random data for easy overfitting.
-    N = 50
-    num_classes = 2
-    ROI_N = 236
-
-    x_train = np.random.rand(N, 100, ROI_N, 1) # (N, frame=100, ROI_N, feature)
-    y_train0 = np.random.choice(num_classes, N) # classify to num_classes categories
+    # Small data (96 clips from 2 subjects) for easy overfitting.
+    data = np.load('small_dataset.npz')
+    x_train = data['x']
+    print('train data shape:', x_train.shape) # train data shape: (96, 100, 236, 1)
+    ROI_N = x_train.shape[-2] # 236 ROIs
+    y_train0 = data['y']
+    num_classes = len(set(y_train0)) # 2 subjects
     y_train = keras.utils.to_categorical(y_train0, num_classes)
+    print('label shape:', y_train.shape) # label shape: (96, 2)
+    assert x_train.shape[0] == y_train.shape[0]
+    for label, count in enumerate(y_train.sum(0)):
+        print('Label %d: %d/%d (%.1f%%)'%(label, count, y_train.shape[0], 100.0 * count / y_train.shape[0]))
+    print()
 
     random_FC = np.random.rand(ROI_N, ROI_N)
     random_FC[np.diag_indices(ROI_N)] = 1
@@ -151,9 +175,9 @@ if __name__ == "__main__":
         skip=[0,0])
     model.summary()
     model.compile(loss=['categorical_crossentropy'], 
-              optimizer=keras.optimizers.Adam(lr=0.0001),
+              optimizer=keras.optimizers.Adam(lr=0.001),
               metrics=['accuracy'])
-    checkpointer = keras.callbacks.ModelCheckpoint(monitor='val_acc', filepath='tmp', 
+    checkpointer = keras.callbacks.ModelCheckpoint(monitor='val_acc', filepath='tmp.hdf5', 
                                                 verbose=1, save_best_only=True)
     model.fit(x_train, y_train,
             shuffle=True,
@@ -161,4 +185,4 @@ if __name__ == "__main__":
             validation_data=(x_train, y_train),
             epochs=50,
             callbacks=[checkpointer])
-    # Best acc: >94% (random: 50%)
+    # Best acc should be 100% (random: 50%).
