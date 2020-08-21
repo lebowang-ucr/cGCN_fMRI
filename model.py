@@ -16,11 +16,12 @@ def T_get_edge_feature(point_cloud_series, nn_idx, k=5):
 #     refer to https://github.com/WangYueFt/dgcnn/blob/master/tensorflow/utils/tf_util.py
 #     Args:
 #     point_cloud_series: (batch_size, time_step, num_points, 1, num_dims)
+#                      or (batch_size, time_step, num_points   , num_dims)
 #     nn_idx: (batch_size, num_points, k)
 #     k: int
 
 #     Returns:
-#     edge features: (batch_size, num_points, k, num_dims)
+#     edge features: (batch_size, time_step, num_points, k, num_dims)
 #     """
 
     assert len(nn_idx.get_shape().as_list()) == 3
@@ -54,30 +55,30 @@ def T_get_edge_feature(point_cloud_series, nn_idx, k=5):
     edge_feature = tf.concat([point_cloud_central, point_cloud_neighbors-point_cloud_central], axis=-1)
     return edge_feature
 
-def T_conv_bn_max(edge_feature, kernel=2, activation_fn='relu', l2=0):
+def T_conv_bn_max(edge_feature, kernel=2, activation_fn='relu'):
 #     """TimeDistributed conv with max as aggregation
 #     Args:
-#     edge_feature from T_get_edge_feature
-#     kernel: conv kernel size
+#     edge_feature: (batch_size, time_step, num_points, k, num_dims)
+#     kernel: conv kernel units
 #     activation_fn: non-linear activation
-#     l2: l2 regularization
 
     ######### Conv2D #########
-    net = TimeDistributed(Conv2D(kernel, (1,1), kernel_regularizer=l2))(edge_feature)
+    net = TimeDistributed(Conv2D(kernel, (1,1)))(edge_feature)
     # net = TimeDistributed(BatchNormalization(axis=-1))(net)
     if activation_fn is not None:
         net = TimeDistributed(Activation(activation_fn))(net)
     return TimeDistributed(Lambda(lambda x: tf.reduce_max(x, axis=-2, keep_dims=True)))(net)
 
-def T_edge_conv(point_cloud_series, graph, kernel=2, activation_fn='relu', k=5, l2=0):
+def T_edge_conv(point_cloud_series, graph, kernel=2, activation_fn='relu', k=5):
 #     """TimeDistributed conv with max as aggregation
+#     """Wrapper for T_get_edge_feature and T_edge_conv
 #     Args:
-#     point_cloud_series: input data
-#     graph: FC graph
-#     kernel: conv kernel size
+#     point_cloud_series: (batch_size, time_step, num_points, 1, num_dims)
+#                      or (batch_size, time_step, num_points   , num_dims)
+#     graph (FC graph): (num_points, k)
+#     kernel: conv kernel units
 #     activation_fn: non-linear activation
-#     k: no. of neighbors for graph-conv
-#     l2: l2 regularization
+#     k: no. of neighbors for cGCN
 
     # assert len(graph.get_shape().as_list()) == 2
     graph = Lambda(lambda x: tf.tile(tf.expand_dims(x[0], axis=0), 
@@ -85,7 +86,7 @@ def T_edge_conv(point_cloud_series, graph, kernel=2, activation_fn='relu', k=5, 
     edge_feature = Lambda(lambda x: T_get_edge_feature(point_cloud_series=x[0], 
         nn_idx=x[1], k=k))([point_cloud_series, graph])
     
-    return T_conv_bn_max(edge_feature, kernel=kernel, activation_fn=activation_fn, l2=l2)
+    return T_conv_bn_max(edge_feature, kernel=kernel, activation_fn=activation_fn)
 
 ######################## Model description ########################
 
@@ -104,13 +105,13 @@ def get_model(graph_path='FC.npy',
     static_graph_input = Input(tensor=tf.constant(graph, dtype=tf.int32), name='graph')
 
     # 5 conv layers
-    net1 = T_edge_conv(main_input, graph=static_graph_input, kernel=kernels[0], k=k, l2=l2(0))
-    net2 = T_edge_conv(net1, graph=static_graph_input, kernel=kernels[1], k=k, l2=l2(0))
-    net3 = T_edge_conv(net2, graph=static_graph_input, kernel=kernels[2], k=k, l2=l2(0))
-    net4 = T_edge_conv(net3, graph=static_graph_input, kernel=kernels[3], k=k, l2=l2(0))
+    net1 = T_edge_conv(main_input, graph=static_graph_input, kernel=kernels[0], k=k)
+    net2 = T_edge_conv(net1, graph=static_graph_input, kernel=kernels[1], k=k)
+    net3 = T_edge_conv(net2, graph=static_graph_input, kernel=kernels[2], k=k)
+    net4 = T_edge_conv(net3, graph=static_graph_input, kernel=kernels[3], k=k)
     net = Lambda(lambda x: tf.concat([x[0], 
         x[1], x[2], x[3]], axis=-1))([net1, net2, net3, net4])
-    net = T_edge_conv(net, graph=static_graph_input, kernel=kernels[4], k=k, l2=l2(0))
+    net = T_edge_conv(net, graph=static_graph_input, kernel=kernels[4], k=k)
     
     net = TimeDistributed(Dropout(dp))(net)
     # ConvLSTM2D layer for temporal info
