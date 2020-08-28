@@ -147,23 +147,25 @@ def get_model(graph_path='FC.npy',
 
 
 if __name__ == "__main__":
-    # Small data (96 clips from 2 subjects) for easy overfitting.
-    data = np.load('small_dataset.npz')
-    x_train = data['x']
-    print('train data shape:', x_train.shape) # train data shape: (96, 100, 236, 1)
-    ROI_N = x_train.shape[-2] # 236 ROIs
-    y_train0 = data['y']
-    num_classes = len(set(y_train0)) # 2 subjects
-    y_train = keras.utils.to_categorical(y_train0, num_classes)
-    print('label shape:', y_train.shape) # label shape: (96, 2)
-    assert x_train.shape[0] == y_train.shape[0]
-    for label, count in enumerate(y_train.sum(0)):
-        print('Label %d: %d/%d (%.1f%%)'%(label, count, y_train.shape[0], 100.0 * count / y_train.shape[0]))
-    print()
-
+    # Overfit on small random datasets
+    ROI_N = 236
     random_FC = np.random.rand(ROI_N, ROI_N)
     random_FC[np.diag_indices(ROI_N)] = 1
     np.save('FC_random', random_FC)
+    
+    N = 50
+    n_frames = 100
+    x_train = np.random.normal(0, 1, size=(N, n_frames, ROI_N, 1))
+    x_test = np.random.normal(0, 1, size=(N, n_frames, ROI_N, 1))
+    print('train data shape:', x_train.shape) # train data shape: (50, 100, 236, 1)
+    print('test data shape:', x_test.shape) # test data shape: (50, 100, 236, 1)
+
+    num_classes = 2
+    label = np.arange(num_classes).repeat(N // num_classes)
+    y_train = y_test = keras.utils.to_categorical(label, num_classes)
+    print('label shape:', y_train.shape) # label shape: (50, 2)
+    for label, count in enumerate(y_train.sum(0)):
+        print('Label %d: %d/%d (%.1f%%)'%(label, count, y_train.shape[0], 100.0 * count / y_train.shape[0]))
 
     model = get_model(
         graph_path='FC_random.npy', 
@@ -183,7 +185,8 @@ if __name__ == "__main__":
     model.fit(x_train, y_train,
             shuffle=True,
             batch_size=4,
-            validation_data=(x_train, y_train),
+            validation_data=(x_test, y_test),
             epochs=50,
             callbacks=[checkpointer])
-    # Best acc should be 100% (random: 50%).
+    # Best Train acc: ~100% (random: 50%).
+    # Best Test acc: ~50% (random: 50%).
