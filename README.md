@@ -13,6 +13,6 @@ we propose a connectivity-based graph convolution network (`cGCN`) architecture 
 - nilearn==0.5.0
 - numpy==1.15.4
 
-## Acknowledgement
+## Acknowledgment
 Some code is borrowed from [dgcnn](
 https://github.com/WangYueFt/dgcnn/blob/master/tensorflow/utils/tf_util.py).
