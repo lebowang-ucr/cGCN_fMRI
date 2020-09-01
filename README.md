@@ -21,11 +21,11 @@ cGCN is tested and compared with ConvRNN [Wang, L., Li, K., Chen, X., & Hu, X. P
 
 cGCN is tested and compared with DNN [Heinsfeld, A. S., Franco, A. R., Craddock, R. C., Buchweitz, A., & Meneguzzi, F. (2018). Identification of autism spectrum disorder using deep learning and the ABIDE dataset. NeuroImage: Clinical, 17, 16-23. ]. Both the leave-one-site-out and 10-fold cross-validations were tested and compared as shown below:
 
-![ABIDE 1](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure3.JPG)
+![ABIDE 1](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure3.jpg)
 
 For the leave-one-site-out cross-validation, the relation between the accuracy and the number of input frames is shown below:
 
-![ABIDE 2](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure4.JPG)
+![ABIDE 2](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure4.jpg)
 
 ## Dependencies
 
