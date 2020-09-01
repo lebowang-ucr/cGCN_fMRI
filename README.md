@@ -7,7 +7,7 @@ We propose a connectivity-based graph convolution network (`cGCN`) architecture 
 
 The architecture of cGCN is shown below:
 
-![Architecture of cGCN](.\fig\Figure1.JPG)
+![Architecture of cGCN](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure1.JPG)
 
 ## Results
 
@@ -15,17 +15,17 @@ The architecture of cGCN is shown below:
 
 cGCN is tested and compared with ConvRNN [Wang, L., Li, K., Chen, X., & Hu, X. P. (2019). Application of Convolutional Recurrent Neural Network for Individual Recognition Based on Resting State fMRI Data. Frontiers in Neuroscience.]. The relation between the accuracy and the number of input frames (the random chance is 1%) is shown below:
 
-![HCP](.\fig\Figure2.JPG)
+![HCP](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure2.JPG)
 
 ### ABIDE dataset
 
 cGCN is tested and compared with DNN [Heinsfeld, A. S., Franco, A. R., Craddock, R. C., Buchweitz, A., & Meneguzzi, F. (2018). Identification of autism spectrum disorder using deep learning and the ABIDE dataset. NeuroImage: Clinical, 17, 16-23. ]. Both the leave-one-site-out and 10-fold cross-validations were tested and compared as shown below:
 
-![ABIDE 1](.\fig\Figure3.JPG)
+![ABIDE 1](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure3.JPG)
 
 For the leave-one-site-out cross-validation, the relation between the accuracy and the number of input frames is shown below:
 
-![ABIDE 2](.\fig\Figure4.JPG)
+![ABIDE 2](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure4.JPG)
 
 ## Dependencies
 
