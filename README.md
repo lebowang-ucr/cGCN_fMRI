@@ -5,7 +5,7 @@ we propose a connectivity-based graph convolution network (`cGCN`) architecture 
 
 Please try out the demo: https://colab.research.google.com/drive/1qTRZaAa4FO4xckKK_dKRuFfVhPZGSzIS?usp=sharing
 
-## Installation
+## Dependencies
 
 - keras==2.1.5
 - tensorflow==1.4.1
