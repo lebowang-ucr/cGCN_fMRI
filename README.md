@@ -29,11 +29,11 @@ For the leave-one-site-out cross-validation, the relation between the accuracy a
 
 ## Dependencies
 
-- keras==2.1.5
-- tensorflow==1.4.1
-- h5py==2.8.0
-- nilearn==0.5.0
-- numpy==1.15.4
+- keras=2.1.5
+- tensorflow=1.4.1
+- h5py=2.8.0
+- nilearn=0.5.0
+- numpy=1.15.4
 
 ## Acknowledgement
 Some code is borrowed from [dgcnn](
