@@ -89,6 +89,7 @@ weight_name = None
 #     weight_name = weight_path+all_right_models[best_acc]
 
 ################################ get model  ######################################################
+# Download 'FC.npy' from https://drive.google.com/file/d/1WP4_9bps-NbX6GNBnhFu8itV3y1jriJL/view?usp=sharing
 model = get_model(
     graph_path='FC.npy', 
     ROI_N=ROI_N,
