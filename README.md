@@ -17,6 +17,7 @@ Alternatively, set up the environment (refer to [dependencies](#dependencies)) a
 - [Data](https://drive.google.com/file/d/1l029ZuOIUY5gehBZCAyHaJqMNuxRHTFc/view?usp=sharing) (Individual identification on 100 unrelated subjects)
 - [FC matrix](https://drive.google.com/file/d/1WP4_9bps-NbX6GNBnhFu8itV3y1jriJL/view?usp=sharing)
 - [Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/model.py)
+- One [pre-trained model](https://drive.google.com/file/d/1KePCfQOt1hk6TfL98Y4qnsFvdTSYPijh/view?usp=sharing)
 
 Then you can run [run_HCP.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/run_HCP.py).
 
