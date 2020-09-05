@@ -70,7 +70,7 @@ def T_conv_bn_max(edge_feature, kernel=2, activation_fn='relu'):
 #     activation_fn: non-linear activation
 #
 #     Returns:
-#     edge features: (batch_size, time_step, num_points, 1, kernel)
+#     conv with max aggregation: (batch_size, time_step, num_points, 1, kernel)
 
     net = TimeDistributed(Conv2D(kernel, (1,1)))(edge_feature)
     # net = TimeDistributed(BatchNormalization(axis=-1))(net) # BatchNorm, can be enabled
