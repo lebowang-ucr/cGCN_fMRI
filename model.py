@@ -90,7 +90,7 @@ def T_edge_conv(point_cloud_series, graph, kernel=2, activation_fn='relu', k=5):
 #     k: no. of neighbors for cGCN
 #
 #     Returns:
-#     edge features: (batch_size, time_step, num_points, 1, kernel)
+#     conv output: (batch_size, time_step, num_points, 1, kernel)
 
     # assert len(graph.get_shape().as_list()) == 2
     graph = Lambda(lambda x: tf.tile(tf.expand_dims(x[0], axis=0), 
