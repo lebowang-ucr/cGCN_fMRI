@@ -7,10 +7,28 @@ The architecture of cGCN is shown below:
 
 ![Architecture of cGCN](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure1.JPG)
 
-## how to run/test
+## How to run/test
 ### HCP dataset
 
-Please try out the demo: https://colab.research.google.com/drive/1qTRZaAa4FO4xckKK_dKRuFfVhPZGSzIS?usp=sharing. Or run the [notebook](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/demo.ipynb) locally.
+Easily try out on colab (https://colab.research.google.com/drive/1qTRZaAa4FO4xckKK_dKRuFfVhPZGSzIS?usp=sharing). Or run the [notebook](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/demo.ipynb) locally. 
+
+Alternatively, set up the environment (refer to [dependencies](#dependencies)) and download data:
+
+- [Data](https://drive.google.com/file/d/1l029ZuOIUY5gehBZCAyHaJqMNuxRHTFc/view?usp=sharing) (Individual identification on 100 unrelated subjects)
+- [FC matrix](https://drive.google.com/file/d/1WP4_9bps-NbX6GNBnhFu8itV3y1jriJL/view?usp=sharing)
+- [Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/model.py)
+
+Then you can run [run_HCP.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/run_HCP.py).
+
+### ABIDE dataset
+
+Please set up the environment (refer to [dependencies](#dependencies)) and download data:
+
+- [Leave-one-site-out dataset](https://drive.google.com/file/d/1xer4TMU1fqbwDO2wBOGrnIFuQ4v4Y3-o/view?usp=sharing)
+- [10-fold dataset](https://drive.google.com/file/d/1RhMRzDRT2vAkXDiW4t55Wbt8XRi6f9_x/view?usp=sharing)
+- [Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/model.py)
+
+Then you can run [run_ABIDE_leave_one_site_out.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/run_ABIDE_leave_one_site_out.py) and [run_ABIDE_10_fold.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/run_ABIDE_10_fold.py).
 
 
 ## Results
@@ -31,7 +49,7 @@ For the leave-one-site-out cross-validation, the relation between the accuracy a
 
 ![ABIDE 2](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/fig/Figure4.jpg)
 
-## Dependencies (#foo)
+## Dependencies
 
 - keras=2.1.5
 - tensorflow=1.4.1
