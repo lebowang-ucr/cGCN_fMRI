@@ -1,4 +1,6 @@
 # Graph Convolution Network for fMRI Analysis Based on Connectivity Neighborhood
+Here is the [paper](https://www.mitpressjournals.org/doi/pdf/10.1162/netn_a_00171).
+
 
 ## Overview
 We propose a connectivity-based graph convolution network (`cGCN`) architecture for fMRI analysis. fMRI data are represented as the k-nearest neighbors graph based on the group functional connectivity, and spatial features are extracted from connectomic neighborhoods through Graph Convolution Networks. We have demonstrated our cGCN architecture on two scenarios with improved classification accuracy (individual identification on HCP dataset and classification of patients from normal controls on ABIDE dataset). cGCN on the graph-represented data can be extended to fMRI data in other data representations, which provides a promising deep learning architecture for fMRI analysis.
