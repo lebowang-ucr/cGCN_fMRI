@@ -1,5 +1,5 @@
 # Graph Convolution Network for fMRI Analysis Based on Connectivity Neighborhood
-Here is the [paper](https://www.mitpressjournals.org/doi/pdf/10.1162/netn_a_00171).
+Here is the [paper](https://www.mitpressjournals.org/doi/pdf/10.1162/netn_a_00171). Please feel free to send [email](mailto:lebo.wang@email.ucr.edu) for any question.
 
 
 ## Overview
