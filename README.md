@@ -12,7 +12,7 @@ The architecture of cGCN is shown below:
 ## How to run/test
 ### HCP dataset
 
-Easily try out on colab (https://colab.research.google.com/drive/1qTRZaAa4FO4xckKK_dKRuFfVhPZGSzIS?usp=sharing). Or run the [notebook](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/demo.ipynb) locally. 
+Easily try out on [colab](https://colab.research.google.com/drive/1qTRZaAa4FO4xckKK_dKRuFfVhPZGSzIS?usp=sharing). Or run the [notebook](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/demo.ipynb) locally. 
 
 Alternatively, set up the environment (refer to [dependencies](#dependencies)) and download data:
 
