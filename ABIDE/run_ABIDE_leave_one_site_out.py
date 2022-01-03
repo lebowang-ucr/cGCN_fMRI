@@ -184,7 +184,7 @@ for site in sites:
     # ######################################## Val and Test ####################################################
     print('Val and Test...')
     del model
-    model = tmp.get_model(
+    model = get_model(
       graph_path=graph_path, 
       ROI_N=ROI_N,
       frames=frames,
