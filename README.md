@@ -16,10 +16,11 @@ Easily try out on [colab](https://colab.research.google.com/drive/1qTRZaAa4FO4xc
 
 Alternatively, set up the environment (refer to [dependencies](#dependencies)) and download data:
 
-- [Data](https://drive.google.com/file/d/1l029ZuOIUY5gehBZCAyHaJqMNuxRHTFc/view?usp=sharing) (Individual identification on 100 unrelated subjects)
-- [FC matrix](https://drive.google.com/file/d/1WP4_9bps-NbX6GNBnhFu8itV3y1jriJL/view?usp=sharing)
-- [Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/model.py)
-- [Pre-trained model](https://drive.google.com/file/d/1KePCfQOt1hk6TfL98Y4qnsFvdTSYPijh/view?usp=sharing)
+- [data](https://drive.google.com/drive/folders/1akwp8DVEUEMD-WA2aNbF0uSbmh_NOFvl?usp=sharing)
+- ~[Data](https://drive.google.com/file/d/1l029ZuOIUY5gehBZCAyHaJqMNuxRHTFc/view?usp=sharing) (Individual identification on 100 unrelated subjects)~
+- ~[FC matrix](https://drive.google.com/file/d/1WP4_9bps-NbX6GNBnhFu8itV3y1jriJL/view?usp=sharing)~
+- ~[Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/model.py)~
+- ~[Pre-trained model](https://drive.google.com/file/d/1KePCfQOt1hk6TfL98Y4qnsFvdTSYPijh/view?usp=sharing)~
 
 Then you can run [run_HCP.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/run_HCP.py).
 
@@ -27,9 +28,10 @@ Then you can run [run_HCP.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master
 
 Please set up the environment (refer to [dependencies](#dependencies)) and download data:
 
-- [Leave-one-site-out dataset](https://drive.google.com/file/d/1xer4TMU1fqbwDO2wBOGrnIFuQ4v4Y3-o/view?usp=sharing)
-- [10-fold dataset](https://drive.google.com/file/d/1RhMRzDRT2vAkXDiW4t55Wbt8XRi6f9_x/view?usp=sharing)
-- [Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/model.py)
+- [data](https://drive.google.com/drive/folders/1akwp8DVEUEMD-WA2aNbF0uSbmh_NOFvl?usp=sharing)
+- ~[Leave-one-site-out dataset](https://drive.google.com/file/d/1xer4TMU1fqbwDO2wBOGrnIFuQ4v4Y3-o/view?usp=sharing)~
+- ~[10-fold dataset](https://drive.google.com/file/d/1RhMRzDRT2vAkXDiW4t55Wbt8XRi6f9_x/view?usp=sharing)~
+- ~[Model](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/model.py)~
 
 Then you can run [run_ABIDE_leave_one_site_out.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/run_ABIDE_leave_one_site_out.py) and [run_ABIDE_10_fold.py](https://github.com/Lebo-Wang/cGCN_fMRI/blob/master/ABIDE/run_ABIDE_10_fold.py).
 
